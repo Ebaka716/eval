@@ -6,8 +6,8 @@ import type { Scenario } from "@/lib/promptlab/scenarios";
 
 export function ScenarioHeader({ scenario, onReload }: { scenario: Scenario | null; onReload: () => void }) {
   return (
-    <section className="space-y-4">
-      <div className="flex items-center gap-2">
+    <section className="space-y-4 text-center">
+      <div className="flex items-center justify-center gap-2">
         <h2 className="text-lg font-medium">Scenarios</h2>
         <Button variant="ghost" size="icon" aria-label="Reload scenario" onClick={onReload}>
           <RotateCcw className="h-4 w-4" />

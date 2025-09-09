@@ -130,7 +130,7 @@ export function PromptEditor({
 
             <div>
               <h3 className="font-medium mb-1">Example Prompt Template</h3>
-              <div className="rounded-md bg-muted p-3 text-xs leading-relaxed font-mono">
+              <div className="rounded-md bg-muted p-3 text-xs leading-relaxed font-mono mx-auto max-w-3xl">
                 <div>[ROLE]</div>
                 <div>You are an expert {'{'}domain_expert{'}'} helping {'{'}audience{'}'}.</div>
                 <div className="h-2" />

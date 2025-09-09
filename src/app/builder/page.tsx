@@ -70,17 +70,27 @@ export default function BuilderPage() {
                     const summary = Object.values(blk.data).find((v) => (v ?? "").trim()) || "";
                     return (
                       <AccordionItem key={blk.instanceId} value={blk.instanceId}>
-                        <AccordionTrigger className="text-sm">
-                          <div className="flex-1 text-left">
-                            <div className="font-medium">{def.title}</div>
-                            {summary && (
-                              <div className="text-xs text-muted-foreground truncate">{String(summary).slice(0, 120)}</div>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="sm" onClick={(e) => { e.preventDefault(); remove(i); }}>Remove</Button>
-                          </div>
-                        </AccordionTrigger>
+                        <div className="flex items-center justify-between gap-2">
+                          <AccordionTrigger className="text-sm flex-1">
+                            <div className="text-left">
+                              <div className="font-medium">{def.title}</div>
+                              {summary && (
+                                <div className="text-xs text-muted-foreground truncate">{String(summary).slice(0, 120)}</div>
+                              )}
+                            </div>
+                          </AccordionTrigger>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              remove(i);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
                         <AccordionContent>
                           <div className="space-y-3 p-2">
                             {def.fields.map((f) => (

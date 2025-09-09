@@ -84,6 +84,7 @@ export async function POST(req: NextRequest) {
       dimensions?: RawDimension[];
       evidence?: unknown[];
       suggestions?: unknown[];
+      overallRationale?: unknown;
       stretchIdea?: unknown;
     };
 
@@ -122,8 +123,8 @@ export async function POST(req: NextRequest) {
     const normalized = {
       overallScore: Math.max(1, Math.min(5, parseInt(String(raw?.overallScore), 10) || 0)),
       overallRationale:
-        typeof (raw as any)?.overallRationale === "string"
-          ? String((raw as any).overallRationale).slice(0, 500)
+        typeof raw?.overallRationale === "string"
+          ? String(raw.overallRationale).slice(0, 500)
           : undefined,
       dimensions: normalizedDims,
       evidence: Array.isArray(raw?.evidence) ? raw.evidence.filter((e): e is string => typeof e === "string") : [],

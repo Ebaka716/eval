@@ -24,13 +24,13 @@ export const FRAMEWORKS: Framework[] = [
     summary:
       "CRISPE is designed for enterprise-grade consistency and safety. It captures capability and constraints, role, high-level instructions, explicit steps, parameters/variables, and evaluation/guardrails. The result is a robust prompt with strong verification and reusability.",
     blocks: [
-      "capability",
-      "constraints",
+      // CRISPE acronym mapping: C (Context), R (Role), I (Instruction), S (Subject), P (Preset), E (Exception)
+      "context",
       "role",
       "instructions",
-      "steps",
-      "variables",
-      "guardrails",
+      "subject",
+      "preset",
+      "exception",
     ],
   },
   {

@@ -98,12 +98,23 @@ export default function BuilderPage() {
                   {canvas.map((blk, i) => {
                     const def = BLOCK_DEFINITIONS.find((d) => d.type === blk.type)!;
                     const summary = Object.values(blk.data).find((v) => (v ?? "").trim()) || "";
+                    const letter = frameworkId === "CRISPE"
+                      ? (blk.type === "context" ? "C"
+                        : blk.type === "role" ? "R"
+                        : blk.type === "instructions" ? "I"
+                        : blk.type === "subject" ? "S"
+                        : blk.type === "preset" ? "P"
+                        : blk.type === "exception" ? "E" : "")
+                      : "";
                     return (
                       <AccordionItem key={blk.instanceId} value={blk.instanceId}>
                         <div className="flex items-center justify-between gap-2">
                           <AccordionTrigger className="text-sm flex-1">
                             <div className="text-left">
-                              <div className="font-medium">{def.title}</div>
+                              <div className="font-medium">
+                                {letter && <span className="mr-2 text-purple-600">{letter}</span>}
+                                {def.title}
+                              </div>
                               {summary && (
                                 <div className="text-xs text-muted-foreground truncate">{String(summary).slice(0, 120)}</div>
                               )}

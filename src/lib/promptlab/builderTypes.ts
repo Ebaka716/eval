@@ -12,7 +12,10 @@ export type BlockType =
   | "capability"
   | "instructions"
   | "action"
-  | "tone";
+  | "tone"
+  | "subject"
+  | "preset"
+  | "exception";
 
 export type BlockField = {
   key: string;
@@ -36,6 +39,14 @@ export type CanvasBlock = {
 };
 
 export const BLOCK_DEFINITIONS: BlockDefinition[] = [
+  {
+    type: "subject",
+    title: "Subject",
+    description: "Area of focus for the response.",
+    fields: [
+      { key: "subject", label: "Subject", placeholder: "Marketing strategy / Data privacy / Onboarding UX", helper: "Define the domain or topic to ground the response." },
+    ],
+  },
   {
     type: "capability",
     title: "Capability",
@@ -115,6 +126,22 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     ],
   },
   {
+    type: "preset",
+    title: "Preset",
+    description: "Predefined parameters, formats, and style.",
+    fields: [
+      { key: "preset", label: "Preset", multiline: true, placeholder: "Tone: …; Length: …; Structure: …", helper: "Provide tone, length, structure, and other formatting presets." },
+    ],
+  },
+  {
+    type: "exception",
+    title: "Exception",
+    description: "Constraints and exclusions to respect.",
+    fields: [
+      { key: "exception", label: "Exception", multiline: true, placeholder: "Avoid …; Do not …; Follow policy …", helper: "State rules to avoid or constraints that must be honored." },
+    ],
+  },
+  {
     type: "guardrails",
     title: "Guardrails / Verification",
     description: "Checks, schemas, references.",
@@ -152,6 +179,9 @@ export function assemblePrompt(blocks: CanvasBlock[]): string {
   const parts: string[] = [];
   for (const b of blocks) {
     switch (b.type) {
+      case "subject":
+        if (b.data.subject?.trim()) parts.push(`[SUBJECT]\n${b.data.subject.trim()}`);
+        break;
       case "capability":
         if (b.data.capability?.trim()) parts.push(`[CAPABILITY]\n${b.data.capability.trim()}`);
         break;
@@ -170,6 +200,9 @@ export function assemblePrompt(blocks: CanvasBlock[]): string {
       case "constraints":
         if (b.data.constraints?.trim()) parts.push(`[CONSTRAINTS]\n${b.data.constraints.trim()}`);
         break;
+      case "preset":
+        if (b.data.preset?.trim()) parts.push(`[PRESET]\n${b.data.preset.trim()}`);
+        break;
       case "steps":
         if (b.data.steps?.trim()) parts.push(`[PROCESS]\n${b.data.steps.trim()}`);
         break;
@@ -184,6 +217,9 @@ export function assemblePrompt(blocks: CanvasBlock[]): string {
         break;
       case "guardrails":
         if (b.data.guardrails?.trim()) parts.push(`[GUARDRAILS]\n${b.data.guardrails.trim()}`);
+        break;
+      case "exception":
+        if (b.data.exception?.trim()) parts.push(`[EXCEPTION]\n${b.data.exception.trim()}`);
         break;
       case "examples":
         if (b.data.examples?.trim()) parts.push(`[EXAMPLES]\n${b.data.examples.trim()}`);

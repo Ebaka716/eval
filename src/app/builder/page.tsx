@@ -46,33 +46,66 @@ export default function BuilderPage() {
   const preview = React.useMemo(() => assemblePrompt(canvas), [canvas]);
   const config = React.useMemo(() => JSON.stringify(exportConfig(canvas), null, 2), [canvas]);
 
-  function crispeHintsFor(type: string): string[] {
-    if (frameworkId !== "CRISPE") return [];
-    switch (type) {
-      case "role":
-        return [
-          "R (Role): Define the role the AI should assume (e.g., consultant, expert, advisor).",
-        ];
-      case "instructions":
-        return [
-          "I (Instruction): Clearly state what the AI should do — the specific action to take.",
-        ];
-      case "capability":
-        return [
-          "S (Subject): Define the subject matter or area of focus (e.g., marketing, strategy).",
-        ];
-      case "constraints":
-        return [
-          "P (Preset): Provide predefined parameters or formats (tone, length, structure).",
-          "E (Exception): Note any exceptions or rules to avoid (restricted topics, policies).",
-        ];
-      case "guardrails":
-        return [
-          "E (Exception): Reinforce constraints and verification rules to ensure compliance.",
-        ];
-      default:
-        return [];
+  function frameworkHints(id: Framework["id"], type: string): string[] {
+    if (id === "CRISPE") {
+      switch (type) {
+        case "context":
+          return [
+            "Provide background information about the scenario or situation. This helps the AI understand the environment and the task at hand.",
+          ];
+        case "role":
+          return [
+            "Define the role the AI should assume when responding (e.g., a consultant, expert, or advisor).",
+          ];
+        case "instructions":
+          return [
+            "Clearly state what the AI is supposed to do or the specific action it should take.",
+          ];
+        case "subject":
+          return [
+            "Define the subject matter or area of focus for the response (e.g., marketing, business strategy, etc.).",
+          ];
+        case "preset":
+          return [
+            "Offer any predefined parameters, guidelines, or expected formats for the response (e.g., tone, length, structure).",
+          ];
+        case "exception":
+          return [
+            "State any exceptions or constraints that the AI should be aware of when providing the response (e.g., avoiding certain topics, adhering to specific rules).",
+          ];
+        default:
+          return [];
+      }
     }
+    if (id === "ICE") {
+      switch (type) {
+        case "instructions":
+          return ["Instruction (I): This is the core command that tells the AI what to do. Instructions should be clear, direct, and specific."];
+        case "context":
+          return ["Context (C): Provide the AI with the necessary background information to perform the task correctly. Context helps the model understand the broader situation and avoid irrelevant tangents."];
+        case "examples":
+          return ["Examples (E): Offering one or more examples of the desired output can significantly improve the quality and format of the model's response. This is also known as \"few-shot prompting\"."];
+        default:
+          return [];
+      }
+    }
+    if (id === "CRAFT") {
+      switch (type) {
+        case "capability":
+          return ["Describe the assistant’s capability relevant to the task."];
+        case "role":
+          return ["Define who the AI is (expertise, audience, perspective)."];
+        case "action":
+          return ["State the specific action to perform (write, generate, analyze, etc.)."];
+        case "output_format":
+          return ["Specify the desired output structure or sections for consistency."];
+        case "tone":
+          return ["Set the voice and style (e.g., professional, concise, friendly)."];
+        default:
+          return [];
+      }
+    }
+    return [];
   }
 
   return (
@@ -98,23 +131,13 @@ export default function BuilderPage() {
                   {canvas.map((blk, i) => {
                     const def = BLOCK_DEFINITIONS.find((d) => d.type === blk.type)!;
                     const summary = Object.values(blk.data).find((v) => (v ?? "").trim()) || "";
-                    const letter = frameworkId === "CRISPE"
-                      ? (blk.type === "context" ? "C"
-                        : blk.type === "role" ? "R"
-                        : blk.type === "instructions" ? "I"
-                        : blk.type === "subject" ? "S"
-                        : blk.type === "preset" ? "P"
-                        : blk.type === "exception" ? "E" : "")
-                      : "";
+                    const hints = frameworkHints(frameworkId, def.type);
                     return (
                       <AccordionItem key={blk.instanceId} value={blk.instanceId}>
                         <div className="flex items-center justify-between gap-2">
                           <AccordionTrigger className="text-sm flex-1">
                             <div className="text-left">
-                              <div className="font-medium">
-                                {letter && <span className="mr-2 text-purple-600">{letter}</span>}
-                                {def.title}
-                              </div>
+                              <div className="font-medium">{def.title}</div>
                               {summary && (
                                 <div className="text-xs text-muted-foreground truncate">{String(summary).slice(0, 120)}</div>
                               )}
@@ -145,14 +168,14 @@ export default function BuilderPage() {
                           <div className="space-y-3 p-2">
                             {def.fields.map((f) => (
                               <div key={f.key} className="space-y-1">
-                                <Label className="text-xs">{f.label}</Label>
-                                {f.helper && <div className="text-[10px] text-muted-foreground">{f.helper}</div>}
-                                {crispeHintsFor(def.type).length > 0 && (
-                                  <ul className="text-[10px] text-muted-foreground list-disc pl-4">
-                                    {crispeHintsFor(def.type).map((h, idx) => (
-                                      <li key={idx}>{h}</li>
-                                    ))}
-                                  </ul>
+                                {hints.length === 0 && (
+                                  <Label className="text-xs">{f.label}</Label>
+                                )}
+                                {hints.length === 0 && f.helper && (
+                                  <div className="text-[10px] text-muted-foreground">{f.helper}</div>
+                                )}
+                                {hints.length > 0 && (
+                                  <div className="text-sm text-muted-foreground">{hints.join(" ")}</div>
                                 )}
                                 {f.multiline ? (
                                   <Textarea

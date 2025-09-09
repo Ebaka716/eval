@@ -15,7 +15,7 @@ export const FRAMEWORKS: Framework[] = [
     description: "Instruction, Context, (Few) Examples.",
     summary:
       "ICE focuses on capturing the essentials for complex, detailed tasks: a clear instruction (what to do), the context (inputs, audience, constraints), and a few targeted examples to anchor behavior. It’s simple, reliable, and reduces ambiguity while keeping prompts compact.",
-    blocks: ["task", "context", "examples"],
+    blocks: ["instructions", "context", "examples"],
   },
   {
     id: "CRISPE",

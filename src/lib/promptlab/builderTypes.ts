@@ -19,6 +19,7 @@ export type BlockField = {
   label: string;
   placeholder?: string;
   multiline?: boolean;
+  helper?: string;
 };
 
 export type BlockDefinition = {
@@ -40,7 +41,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Capability",
     description: "Core capability or objective of the agent.",
     fields: [
-      { key: "capability", label: "Capability", placeholder: "You can … / This agent is capable of …" },
+      { key: "capability", label: "Capability", placeholder: "You can … / This agent is capable of …", helper: "Describe what the assistant is uniquely able to do for this task." },
     ],
   },
   {
@@ -48,7 +49,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Role",
     description: "Who the AI should act as.",
     fields: [
-      { key: "role", label: "Role description", placeholder: "You are an expert {domain_expert} helping {audience}." },
+      { key: "role", label: "Role description", placeholder: "You are an expert {domain_expert} helping {audience}.", helper: "Anchor expertise, audience, and perspective." },
     ],
   },
   {
@@ -56,26 +57,21 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Instructions",
     description: "High-level instructions distinct from step list.",
     fields: [
-      { key: "instructions", label: "Instructions", multiline: true, placeholder: "Follow these guidelines…" },
+      { key: "instructions", label: "Instructions", multiline: true, placeholder: "Follow these guidelines…", helper: "High-level guardrails separate from step-by-step process." },
     ],
   },
   {
     type: "task",
     title: "Task",
     description: "One-sentence directive.",
-    fields: [{ key: "task", label: "Task statement", placeholder: "Your task is to {main_objective}." }],
+    fields: [{ key: "task", label: "Task statement", placeholder: "Your task is to {main_objective}.", helper: "One clear, action-oriented sentence." }],
   },
   {
     type: "context",
     title: "Context",
     description: "Background, inputs, audience.",
     fields: [
-      {
-        key: "context",
-        label: "Context",
-        multiline: true,
-        placeholder: "The audience is …; inputs include …; important background …",
-      },
+      { key: "context", label: "Context", multiline: true, placeholder: "The audience is …; inputs include …; important background …", helper: "Provide inputs, audience, constraints, references." },
     ],
   },
   {
@@ -83,7 +79,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Constraints",
     description: "Tone, limits, must/avoid.",
     fields: [
-      { key: "constraints", label: "Constraints", multiline: true, placeholder: "Tone: …; Length: …; Avoid: …" },
+      { key: "constraints", label: "Constraints", multiline: true, placeholder: "Tone: …; Length: …; Avoid: …", helper: "Hard requirements and limits (tone, length, must/avoid)." },
     ],
   },
   {
@@ -91,12 +87,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Steps / Process",
     description: "Explicit ordered steps.",
     fields: [
-      {
-        key: "steps",
-        label: "Steps (numbered)",
-        multiline: true,
-        placeholder: "1) …\n2) …\n3) …",
-      },
+      { key: "steps", label: "Steps (numbered)", multiline: true, placeholder: "1) …\n2) …\n3) …", helper: "Numbered, modular steps with clean handoffs." },
     ],
   },
   {
@@ -104,12 +95,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Output Format",
     description: "Expected structure of the answer.",
     fields: [
-      {
-        key: "format",
-        label: "Format",
-        multiline: true,
-        placeholder: "Return Markdown with sections: …",
-      },
+      { key: "format", label: "Format", multiline: true, placeholder: "Return Markdown with sections: …", helper: "Define exact output structure for consistency and reuse." },
     ],
   },
   {
@@ -117,7 +103,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Tone",
     description: "Voice and style guidance.",
     fields: [
-      { key: "tone", label: "Tone", placeholder: "Professional, concise, friendly…" },
+      { key: "tone", label: "Tone", placeholder: "Professional, concise, friendly…", helper: "Style and voice guidance." },
     ],
   },
   {
@@ -125,7 +111,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Action",
     description: "Specific action to take.",
     fields: [
-      { key: "action", label: "Action", placeholder: "Write / Generate / Analyze …" },
+      { key: "action", label: "Action", placeholder: "Write / Generate / Analyze …", helper: "What should be done concretely." },
     ],
   },
   {
@@ -133,12 +119,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Guardrails / Verification",
     description: "Checks, schemas, references.",
     fields: [
-      {
-        key: "guardrails",
-        label: "Guardrails",
-        multiline: true,
-        placeholder: "Validate against schema …; verify citations …",
-      },
+      { key: "guardrails", label: "Guardrails", multiline: true, placeholder: "Validate against schema …; verify citations …", helper: "Checks for correctness and safety; include schemas if relevant." },
     ],
   },
   {
@@ -146,12 +127,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Examples / Few-shot",
     description: "Examples and counterexamples.",
     fields: [
-      {
-        key: "examples",
-        label: "Examples",
-        multiline: true,
-        placeholder: "Good: …\nBad: …",
-      },
+      { key: "examples", label: "Examples", multiline: true, placeholder: "Good: …\nBad: …", helper: "A few short examples to anchor behavior; include counterexamples if useful." },
     ],
   },
   {
@@ -159,12 +135,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Variables / Placeholders",
     description: "Reusable parameters.",
     fields: [
-      {
-        key: "variables",
-        label: "Variables",
-        multiline: true,
-        placeholder: "{audience}: …\n{topic}: …",
-      },
+      { key: "variables", label: "Variables", multiline: true, placeholder: "{audience}: …\n{topic}: …", helper: "Reusable placeholders with short descriptions." },
     ],
   },
   {
@@ -172,12 +143,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     title: "Evaluation Check",
     description: "Self-check before finalizing.",
     fields: [
-      {
-        key: "check",
-        label: "Checklist",
-        multiline: true,
-        placeholder: "- Each claim supported?\n- Structure matches format?\n- Jargon defined?",
-      },
+      { key: "check", label: "Checklist", multiline: true, placeholder: "- Each claim supported?\n- Structure matches format?\n- Jargon defined?", helper: "Self-review questions before finalizing." },
     ],
   },
 ];

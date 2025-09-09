@@ -4,10 +4,11 @@ export const runtime = "nodejs";
 import { z } from "zod";
 import { EvaluationSchema } from "@/lib/promptlab/schemas";
 import { PROMPTLAB_SYSTEM_PROMPT } from "@/lib/promptlab/systemPrompt";
+import { DIMENSIONS, RUBRIC_TEXT } from "@/lib/promptlab/dimensions";
+import { getScenarioById } from "@/lib/promptlab/scenarios";
 
 const RequestSchema = z.object({
-  scenarioId: z.string().optional(),
-  scenarioText: z.string(),
+  scenarioId: z.string(),
   userPrompt: z.string().min(1),
 });
 
@@ -20,21 +21,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid request", issues: parsed.error.format() }, { status: 400 });
     }
 
-    const { scenarioText, userPrompt } = parsed.data;
+    const { scenarioId, userPrompt } = parsed.data;
+    const scenario = getScenarioById(scenarioId);
+    if (!scenario) {
+      return NextResponse.json({ error: "Unknown scenarioId" }, { status: 400 });
+    }
 
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     if (!client.apiKey) {
       return NextResponse.json({ error: "Missing OPENAI_API_KEY" }, { status: 500 });
     }
 
-    const rubric = `Rubric v1.0 Dimensions (1–5):\n1. Prompt Clarity\n2. Context & Grounding\n3. Sequencing & Modularity\n4. Guarding & Verification\n5. Outcome Quality\n6. Originality & Innovation\n7. Efficiency\nAnchors: 5=exemplary; 3=workable; 1=unclear/risky.`;
+    const rubric = RUBRIC_TEXT;
 
     const messages: OpenAI.ChatCompletionMessageParam[] = [
       { role: "system", content: PROMPTLAB_SYSTEM_PROMPT },
       {
         role: "user",
         content:
-          `MODE: EVALUATOR\nSCENARIO: ${scenarioText}\nSUBMISSION:\n${userPrompt}\n\nReturn ONLY JSON with keys: overallScore (1-5 int), dimensions (array of {key,label,score:int,comments?:string}), evidence (array of strings), suggestions (>=2 strings), stretchIdea (string).\nUse EXACT dimension keys: clarity, context, sequencing, guarding, outcome, originality, efficiency. Do NOT use numbers for keys.\nInclude at least 2 suggestions and a stretch idea. Rubric: ${rubric}`,
+          `MODE: EVALUATOR\nSCENARIO TITLE: ${scenario.title}\nSCENARIO DESCRIPTION: ${scenario.description}\nSCENARIO TEMPLATE: ${scenario.template}\nSUBMISSION:\n${userPrompt}\n\nReturn ONLY JSON with keys: overallScore (1-5 int), dimensions (array of {key,label,score:int,comments?:string}), evidence (array of strings), suggestions (>=2 strings), stretchIdea (string).\nUse EXACT dimension keys: ${DIMENSIONS.map((d) => d.key).join(", ")}. Do NOT use numbers for keys.\nInclude at least 2 suggestions and a stretch idea. Rubric: ${rubric}`,
       },
     ];
 
@@ -64,14 +69,14 @@ export async function POST(req: NextRequest) {
 
     // Normalize model output (coerce numeric keys to canonical strings, clamp scores)
     const DIMENSION_MAP: Record<number, { key: string; label: string }> = {
-      1: { key: "clarity", label: "Prompt Clarity" },
-      2: { key: "context", label: "Context & Grounding" },
-      3: { key: "sequencing", label: "Sequencing & Modularity" },
-      4: { key: "guarding", label: "Guarding & Verification" },
-      5: { key: "outcome", label: "Outcome Quality" },
-      6: { key: "originality", label: "Originality & Innovation" },
-      7: { key: "efficiency", label: "Efficiency" },
-    };
+      1: DIMENSIONS[0],
+      2: DIMENSIONS[1],
+      3: DIMENSIONS[2],
+      4: DIMENSIONS[3],
+      5: DIMENSIONS[4],
+      6: DIMENSIONS[5],
+      7: DIMENSIONS[6],
+    } as const;
 
     type RawDimension = { key: string | number; label?: string; score: number | string; comments?: string };
     type RawPayload = {

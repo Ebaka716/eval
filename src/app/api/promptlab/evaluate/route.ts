@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
         messages,
       });
     } catch (e) {
-      const err = e as any;
+      const err = e as unknown as { error?: { message?: string }; message?: string; status?: number };
       console.error("OpenAI API error", err);
       const msg = (err?.error?.message || err?.message || "OpenAI request failed").toString();
       const status = Number(err?.status || 502);
@@ -129,9 +129,9 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(validated.data, { status: 200 });
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("/api/promptlab/evaluate unexpected", err);
-    const msg = (err as any)?.message || "Unexpected error";
+    const msg = (err as { message?: string } | undefined)?.message || "Unexpected error";
     return NextResponse.json({ error: "Unexpected error", message: msg }, { status: 500 });
   }
 }

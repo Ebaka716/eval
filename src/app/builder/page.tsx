@@ -62,6 +62,7 @@ export default function BuilderPage() {
           {FRAMEWORKS.map((fw) => (
             <TabsContent key={fw.id} value={fw.id} className="space-y-4">
               <div className="text-xs text-muted-foreground">{fw.description}</div>
+              <p className="text-sm text-muted-foreground">{fw.summary}</p>
               <div className="space-y-3">
                 <div className="text-sm font-medium">Blocks</div>
                 <Accordion type="multiple" className="space-y-2">
@@ -85,10 +86,19 @@ export default function BuilderPage() {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              remove(i);
+                              // Clear fields instead of removing the block
+                              setCanvas((prev) => {
+                                const next = [...prev];
+                                const def = BLOCK_DEFINITIONS.find((d) => d.type === next[i].type)!;
+                                next[i] = {
+                                  ...next[i],
+                                  data: Object.fromEntries(def.fields.map((f) => [f.key, ""])),
+                                };
+                                return next;
+                              });
                             }}
                           >
-                            Remove
+                            Clear
                           </Button>
                         </div>
                         <AccordionContent>

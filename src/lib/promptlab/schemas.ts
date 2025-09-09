@@ -9,6 +9,7 @@ export const DimensionSchema = z.object({
 
 export const EvaluationSchema = z.object({
   overallScore: z.number().int().min(1).max(5),
+  overallRationale: z.string().min(1).max(500).optional(),
   dimensions: z.array(DimensionSchema).min(1),
   evidence: z.array(z.string()).min(1).max(10),
   suggestions: z.array(z.string()).min(2).max(10),

@@ -18,17 +18,20 @@ export function EvaluationDialog({
   onOpenChange,
   overallScore,
   dimensions,
+  overallRationaleText,
   error,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   overallScore: number;
   dimensions: DimensionScore[];
+  overallRationaleText?: string;
   error?: string;
 }) {
-  const overallRationale = dimensions
+  const fallbackOverall = dimensions
     .map((d) => `${d.label}: ${d.comments ? d.comments : anchorExplanation(d.score)}`)
     .join(" ");
+  const overallRationale = overallRationaleText && overallRationaleText.trim().length > 0 ? overallRationaleText : fallbackOverall;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

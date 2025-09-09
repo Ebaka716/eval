@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       {
         role: "user",
         content:
-          `MODE: EVALUATOR\nSCENARIO TITLE: ${scenario.title}\nSCENARIO DESCRIPTION: ${scenario.description}\nSCENARIO TEMPLATE: ${scenario.template}\nSUBMISSION:\n${userPrompt}\n\nReturn ONLY JSON with keys: overallScore (1-5 int), dimensions (array of {key,label,score:int,comments?:string}), evidence (array of strings), suggestions (>=2 strings), stretchIdea (string).\nUse EXACT dimension keys: ${DIMENSIONS.map((d) => d.key).join(", ")}. Do NOT use numbers for keys.\nInclude at least 2 suggestions and a stretch idea. Rubric: ${rubric}`,
+          `MODE: EVALUATOR\nSCENARIO TITLE: ${scenario.title}\nSCENARIO DESCRIPTION: ${scenario.description}\nSCENARIO TEMPLATE: ${scenario.template}\nSUBMISSION:\n${userPrompt}\n\nReturn ONLY JSON with keys: overallScore (1-5 int), overallRationale (string ≤ 500 chars), dimensions (array of {key,label,score:int,comments?:string}), evidence (array of strings), suggestions (>=2 strings), stretchIdea (string).\nUse EXACT dimension keys: ${DIMENSIONS.map((d) => d.key).join(", ")}. Do NOT use numbers for keys.\nOverall rationale: 2–4 sentences, no bullet points, no dimension names; synthesize strengths/weaknesses and end with one next improvement.\nInclude at least 2 suggestions and a stretch idea. Rubric: ${rubric}`,
       },
     ];
 
@@ -121,6 +121,10 @@ export async function POST(req: NextRequest) {
 
     const normalized = {
       overallScore: Math.max(1, Math.min(5, parseInt(String(raw?.overallScore), 10) || 0)),
+      overallRationale:
+        typeof (raw as any)?.overallRationale === "string"
+          ? String((raw as any).overallRationale).slice(0, 500)
+          : undefined,
       dimensions: normalizedDims,
       evidence: Array.isArray(raw?.evidence) ? raw.evidence.filter((e): e is string => typeof e === "string") : [],
       suggestions: Array.isArray(raw?.suggestions) ? raw.suggestions.filter((e): e is string => typeof e === "string") : [],

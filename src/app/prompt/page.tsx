@@ -22,6 +22,7 @@ export default function PromptPage() {
   const [overallScore, setOverallScore] = React.useState<number>(0);
   const [dimensionScores, setDimensionScores] = React.useState<DimensionScore[]>([]);
   const [errorMsg, setErrorMsg] = React.useState<string>("");
+  const [overallRationale, setOverallRationale] = React.useState<string>("");
 
   function randomizeScenario() {
     const next = getRandomScenario(currentScenario?.id);
@@ -61,6 +62,7 @@ export default function PromptPage() {
       const avg = data.overallScore ?? 0;
       setDimensionScores(dims);
       setOverallScore(avg);
+      setOverallRationale(typeof data.overallRationale === "string" ? data.overallRationale : "");
       setErrorMsg("");
       setShowResults(true);
     } catch (e) {
@@ -91,6 +93,7 @@ export default function PromptPage() {
         }}
         overallScore={overallScore}
         dimensions={dimensionScores}
+        overallRationaleText={overallRationale}
         error={errorMsg || undefined}
       />
 

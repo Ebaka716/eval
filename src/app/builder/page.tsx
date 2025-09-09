@@ -12,7 +12,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 export default function BuilderPage() {
   const [frameworkId, setFrameworkId] = React.useState<Framework["id"]>("ICE");
   const [canvas, setCanvas] = React.useState<CanvasBlock[]>([]);
-  const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
 
   // reset canvas when framework changes
   React.useEffect(() => {
@@ -27,7 +26,6 @@ export default function BuilderPage() {
       } satisfies CanvasBlock;
     });
     setCanvas(initial);
-    setSelectedIndex(null);
   }, [frameworkId]);
 
   function updateField(index: number, key: string, value: string) {
@@ -38,10 +36,7 @@ export default function BuilderPage() {
     });
   }
 
-  function remove(index: number) {
-    setCanvas((prev) => prev.filter((_, i) => i !== index));
-    setSelectedIndex(null);
-  }
+  // no-op
 
   const preview = React.useMemo(() => assemblePrompt(canvas), [canvas]);
   const config = React.useMemo(() => JSON.stringify(exportConfig(canvas), null, 2), [canvas]);

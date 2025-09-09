@@ -2,11 +2,13 @@
 
 import * as React from "react";
 import { BLOCK_DEFINITIONS, type BlockDefinition, type CanvasBlock, assemblePrompt, exportConfig } from "@/lib/promptlab/builderTypes";
+import { FRAMEWORKS, getFramework, type Framework } from "@/lib/promptlab/frameworks";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
 export default function BuilderPage() {
+  const [frameworkId, setFrameworkId] = React.useState<Framework["id"]>("ICE");
   const [canvas, setCanvas] = React.useState<CanvasBlock[]>([]);
   const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
 
@@ -19,6 +21,22 @@ export default function BuilderPage() {
     setCanvas((prev) => [...prev, instance]);
     setSelectedIndex(canvas.length);
   }
+
+  // reset canvas when framework changes
+  React.useEffect(() => {
+    const fw = getFramework(frameworkId);
+    if (!fw) return;
+    const initial: CanvasBlock[] = fw.blocks.map((bt) => {
+      const def = BLOCK_DEFINITIONS.find((d) => d.type === bt)!;
+      return {
+        instanceId: `${bt}-${Math.random().toString(36).slice(2, 6)}`,
+        type: bt,
+        data: Object.fromEntries(def.fields.map((f) => [f.key, ""])),
+      } satisfies CanvasBlock;
+    });
+    setCanvas(initial);
+    setSelectedIndex(null);
+  }, [frameworkId]);
 
   function updateField(index: number, key: string, value: string) {
     setCanvas((prev) => {
@@ -52,15 +70,23 @@ export default function BuilderPage() {
     <div className="p-6 grid gap-6 md:grid-cols-3">
       <div className="md:col-span-1 space-y-3">
         <h1 className="text-2xl font-semibold">Prompt Builder</h1>
-        <p className="text-sm text-muted-foreground">Drag building blocks into your prompt. Click a block to edit.</p>
+        <p className="text-sm text-muted-foreground">Choose a framework; fill blocks; preview & export.</p>
         <div className="space-y-2">
-          <div className="text-xs font-medium uppercase text-muted-foreground">Blocks</div>
-          <div className="grid grid-cols-2 gap-2">
-            {BLOCK_DEFINITIONS.map((b) => (
-              <Button key={b.type} variant="secondary" size="sm" onClick={() => addBlock(b)}>
-                {b.title}
+          <div className="text-xs font-medium uppercase text-muted-foreground">Framework</div>
+          <div className="flex items-center gap-2 flex-wrap">
+            {FRAMEWORKS.map((fw) => (
+              <Button
+                key={fw.id}
+                size="sm"
+                variant={fw.id === frameworkId ? "default" : "secondary"}
+                onClick={() => setFrameworkId(fw.id)}
+              >
+                {fw.title}
               </Button>
             ))}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {getFramework(frameworkId)?.description}
           </div>
         </div>
       </div>
@@ -68,10 +94,7 @@ export default function BuilderPage() {
       <div className="md:col-span-1 space-y-3">
         <div className="text-sm font-medium">Canvas</div>
         <div className="space-y-2">
-          {canvas.length === 0 ? (
-            <div className="text-xs text-muted-foreground">No blocks yet. Add from the palette.</div>
-          ) : (
-            canvas.map((blk, i) => {
+          {canvas.map((blk, i) => {
               const def = BLOCK_DEFINITIONS.find((d) => d.type === blk.type)!;
               const isActive = i === selectedIndex;
               return (
@@ -79,12 +102,6 @@ export default function BuilderPage() {
                   <div className="flex items-center justify-between">
                     <div className="text-sm font-medium">{def.title}</div>
                     <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="sm" onClick={() => move(i, -1)} disabled={i === 0}>
-                        ↑
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => move(i, 1)} disabled={i === canvas.length - 1}>
-                        ↓
-                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => remove(i)}>
                         Remove
                       </Button>
@@ -95,8 +112,7 @@ export default function BuilderPage() {
                   </div>
                 </div>
               );
-            })
-          )}
+            })}
         </div>
       </div>
 

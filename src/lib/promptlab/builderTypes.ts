@@ -8,7 +8,11 @@ export type BlockType =
   | "guardrails"
   | "examples"
   | "variables"
-  | "evaluation_check";
+  | "evaluation_check"
+  | "capability"
+  | "instructions"
+  | "action"
+  | "tone";
 
 export type BlockField = {
   key: string;
@@ -32,11 +36,27 @@ export type CanvasBlock = {
 
 export const BLOCK_DEFINITIONS: BlockDefinition[] = [
   {
+    type: "capability",
+    title: "Capability",
+    description: "Core capability or objective of the agent.",
+    fields: [
+      { key: "capability", label: "Capability", placeholder: "You can … / This agent is capable of …" },
+    ],
+  },
+  {
     type: "role",
     title: "Role",
     description: "Who the AI should act as.",
     fields: [
       { key: "role", label: "Role description", placeholder: "You are an expert {domain_expert} helping {audience}." },
+    ],
+  },
+  {
+    type: "instructions",
+    title: "Instructions",
+    description: "High-level instructions distinct from step list.",
+    fields: [
+      { key: "instructions", label: "Instructions", multiline: true, placeholder: "Follow these guidelines…" },
     ],
   },
   {
@@ -90,6 +110,22 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
         multiline: true,
         placeholder: "Return Markdown with sections: …",
       },
+    ],
+  },
+  {
+    type: "tone",
+    title: "Tone",
+    description: "Voice and style guidance.",
+    fields: [
+      { key: "tone", label: "Tone", placeholder: "Professional, concise, friendly…" },
+    ],
+  },
+  {
+    type: "action",
+    title: "Action",
+    description: "Specific action to take.",
+    fields: [
+      { key: "action", label: "Action", placeholder: "Write / Generate / Analyze …" },
     ],
   },
   {
@@ -150,8 +186,14 @@ export function assemblePrompt(blocks: CanvasBlock[]): string {
   const parts: string[] = [];
   for (const b of blocks) {
     switch (b.type) {
+      case "capability":
+        if (b.data.capability?.trim()) parts.push(`[CAPABILITY]\n${b.data.capability.trim()}`);
+        break;
       case "role":
         if (b.data.role?.trim()) parts.push(`[ROLE]\n${b.data.role.trim()}`);
+        break;
+      case "instructions":
+        if (b.data.instructions?.trim()) parts.push(`[INSTRUCTIONS]\n${b.data.instructions.trim()}`);
         break;
       case "task":
         if (b.data.task?.trim()) parts.push(`[TASK]\n${b.data.task.trim()}`);
@@ -167,6 +209,12 @@ export function assemblePrompt(blocks: CanvasBlock[]): string {
         break;
       case "output_format":
         if (b.data.format?.trim()) parts.push(`[OUTPUT FORMAT]\n${b.data.format.trim()}`);
+        break;
+      case "tone":
+        if (b.data.tone?.trim()) parts.push(`[TONE]\n${b.data.tone.trim()}`);
+        break;
+      case "action":
+        if (b.data.action?.trim()) parts.push(`[ACTION]\n${b.data.action.trim()}`);
         break;
       case "guardrails":
         if (b.data.guardrails?.trim()) parts.push(`[GUARDRAILS]\n${b.data.guardrails.trim()}`);

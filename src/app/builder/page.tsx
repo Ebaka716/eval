@@ -46,6 +46,35 @@ export default function BuilderPage() {
   const preview = React.useMemo(() => assemblePrompt(canvas), [canvas]);
   const config = React.useMemo(() => JSON.stringify(exportConfig(canvas), null, 2), [canvas]);
 
+  function crispeHintsFor(type: string): string[] {
+    if (frameworkId !== "CRISPE") return [];
+    switch (type) {
+      case "role":
+        return [
+          "R (Role): Define the role the AI should assume (e.g., consultant, expert, advisor).",
+        ];
+      case "instructions":
+        return [
+          "I (Instruction): Clearly state what the AI should do — the specific action to take.",
+        ];
+      case "capability":
+        return [
+          "S (Subject): Define the subject matter or area of focus (e.g., marketing, strategy).",
+        ];
+      case "constraints":
+        return [
+          "P (Preset): Provide predefined parameters or formats (tone, length, structure).",
+          "E (Exception): Note any exceptions or rules to avoid (restricted topics, policies).",
+        ];
+      case "guardrails":
+        return [
+          "E (Exception): Reinforce constraints and verification rules to ensure compliance.",
+        ];
+      default:
+        return [];
+    }
+  }
+
   return (
     <div className="p-6 grid gap-6 md:grid-cols-2">
       <div className="space-y-4">
@@ -107,6 +136,13 @@ export default function BuilderPage() {
                               <div key={f.key} className="space-y-1">
                                 <Label className="text-xs">{f.label}</Label>
                                 {f.helper && <div className="text-[10px] text-muted-foreground">{f.helper}</div>}
+                                {crispeHintsFor(def.type).length > 0 && (
+                                  <ul className="text-[10px] text-muted-foreground list-disc pl-4">
+                                    {crispeHintsFor(def.type).map((h, idx) => (
+                                      <li key={idx}>{h}</li>
+                                    ))}
+                                  </ul>
+                                )}
                                 {f.multiline ? (
                                   <Textarea
                                     value={blk.data[f.key] ?? ""}

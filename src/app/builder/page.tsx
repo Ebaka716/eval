@@ -104,7 +104,7 @@ export default function BuilderPage() {
   }
 
   return (
-    <div className="p-6 grid gap-6 md:grid-cols-2">
+    <div className="mx-auto max-w-5xl px-6 py-6 grid gap-6 md:grid-cols-2">
       <div className="space-y-4">
         <div>
           <h1 className="text-2xl font-semibold">Prompt Builder</h1>

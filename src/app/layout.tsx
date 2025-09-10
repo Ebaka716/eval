@@ -30,9 +30,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <header className="border-b">
-          <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">
-            <Link href="/" className="font-semibold">PromptLab</Link>
-            <nav className="flex items-center gap-2">
+          <div className="mx-auto max-w-5xl px-6 py-3 flex items-center justify-center">
+            <nav className="flex items-center gap-4">
               <Link href="/prompt">
                 <Button variant="ghost" size="sm">Evaluator</Button>
               </Link>
@@ -42,7 +41,7 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
-        <main className="mx-auto max-w-6xl px-4 py-6">
+        <main className="mx-auto max-w-5xl px-6 py-6">
           {children}
         </main>
       </body>

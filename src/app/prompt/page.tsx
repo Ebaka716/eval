@@ -73,7 +73,7 @@ export default function PromptPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl p-6 space-y-8">
+    <div className="mx-auto max-w-5xl px-6 py-6 space-y-8">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">Evaluator</h1>
         <p className="text-muted-foreground text-sm">

@@ -41,6 +41,9 @@ export default function RootLayout({
               <Link href="/builder">
                 <Button variant="ghost" size="sm">Prompt Builder</Button>
               </Link>
+              <Link href="/runner">
+                <Button variant="ghost" size="sm">Agent Runner</Button>
+              </Link>
             </nav>
             <div className="justify-self-end" />
           </div>

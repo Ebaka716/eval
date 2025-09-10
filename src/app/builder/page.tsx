@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { BLOCK_DEFINITIONS, type CanvasBlock, assemblePrompt, exportConfig } from "@/lib/promptlab/builderTypes";
+import { BLOCK_DEFINITIONS, type CanvasBlock, assemblePrompt } from "@/lib/promptlab/builderTypes";
 import { FRAMEWORKS, getFramework, type Framework } from "@/lib/promptlab/frameworks";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,7 +39,7 @@ export default function BuilderPage() {
   // no-op
 
   const preview = React.useMemo(() => assemblePrompt(canvas), [canvas]);
-  const config = React.useMemo(() => JSON.stringify(exportConfig(canvas), null, 2), [canvas]);
+  // const config = React.useMemo(() => JSON.stringify(exportConfig(canvas), null, 2), [canvas]);
 
   function frameworkHints(id: Framework["id"], type: string): string[] {
     if (id === "CRISPE") {
@@ -104,8 +104,8 @@ export default function BuilderPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-6 grid gap-6 md:grid-cols-2">
-      <div className="space-y-4">
+    <div className="mx-auto max-w-5xl px-6 py-6 grid gap-8 md:grid-cols-2">
+      <div className="space-y-4 min-w-0 pr-4">
         <div>
           <h1 className="text-2xl font-semibold">Prompt Builder</h1>
           <p className="text-sm text-muted-foreground">Choose a framework; fill blocks; preview & export.</p>
@@ -125,22 +125,19 @@ export default function BuilderPage() {
                 <Accordion type="multiple" className="space-y-2">
                   {canvas.map((blk, i) => {
                     const def = BLOCK_DEFINITIONS.find((d) => d.type === blk.type)!;
-                    const summary = Object.values(blk.data).find((v) => (v ?? "").trim()) || "";
                     const hints = frameworkHints(frameworkId, def.type);
                     return (
                       <AccordionItem key={blk.instanceId} value={blk.instanceId}>
-                        <div className="flex items-center justify-between gap-2">
-                          <AccordionTrigger className="text-sm flex-1">
-                            <div className="text-left">
+                        <div className="flex items-center justify-between gap-2 min-w-0 max-w-full overflow-hidden flex-nowrap w-full">
+                          <AccordionTrigger className="text-sm flex-1 min-w-0">
+                            <div className="text-left min-w-0 max-w-full">
                               <div className="font-medium">{def.title}</div>
-                              {summary && (
-                                <div className="text-xs text-muted-foreground truncate">{String(summary).slice(0, 120)}</div>
-                              )}
                             </div>
                           </AccordionTrigger>
                           <Button
                             variant="ghost"
                             size="sm"
+                            className="shrink-0"
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
@@ -201,7 +198,7 @@ export default function BuilderPage() {
         </Tabs>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3 min-w-0 pl-4">
         <div className="text-sm font-medium">Live Preview</div>
         <Textarea readOnly value={preview} className="min-h-[420px] font-mono text-xs" />
         <div className="flex items-center gap-2">
@@ -212,17 +209,25 @@ export default function BuilderPage() {
             }}
             disabled={!preview.trim()}
           >
-            Copy Prompt
+            Copy
           </Button>
           <Button
             size="sm"
-            variant="secondary"
+            variant="ghost"
             onClick={() => {
-              navigator.clipboard.writeText(config);
+              const blob = new Blob([preview], { type: "text/plain;charset=utf-8" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `prompt-${frameworkId.toLowerCase()}.txt`;
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              URL.revokeObjectURL(url);
             }}
-            disabled={canvas.length === 0}
+            disabled={!preview.trim()}
           >
-            Copy JSON
+            Download
           </Button>
         </div>
       </div>

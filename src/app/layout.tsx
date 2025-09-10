@@ -32,7 +32,7 @@ export default function RootLayout({
         <header className="border-b">
           <div className="mx-auto max-w-5xl px-6 py-3 grid grid-cols-3 items-center">
             <div className="justify-self-start">
-              <Link href="/" className="font-semibold">PromptLab</Link>
+              <Link href="/" className="font-semibold">promptLab</Link>
             </div>
             <nav className="justify-self-center flex items-center gap-4">
               <Link href="/prompt">

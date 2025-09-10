@@ -17,7 +17,7 @@ export function ScenarioHeader({ scenario, onReload }: { scenario: Scenario | nu
         <p className="text-2xl font-semibold text-purple-600">
           {scenario ? scenario.title : "Preparing scenario…"}
         </p>
-        <p className="text-sm text-purple-500">
+        <p className="text-sm text-purple-500 font-serif">
           {scenario ? scenario.description : "One moment while we load a scenario for you."}
         </p>
       </div>

@@ -22,3 +22,4 @@
 - Zod for schemas; server normalization of model output
 - OpenAI SDK for LLM calls (`chat.completions` JSON mode)
 - API route `/api/promptlab/evaluate` accepts scenario text and user prompt
+- API route `/api/promptlab/runner` accepts block list + agent settings; executes Input/Prompt/Transform/Output sequentially; returns logs + variables

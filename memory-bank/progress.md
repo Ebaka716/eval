@@ -10,8 +10,9 @@
 - Shared scenarios and rubric/dimensions modules
 - Server‑side scenario lookup by `scenarioId`
 - Model returns `overallRationale` (concise overall summary)
-- Framework‑driven Prompt Builder with tabs (ICE/CRISPE/CRAFT), inline accordion editors, and live prompt/JSON preview
+- Framework‑driven Prompt Builder with tabs (ICE/CRISPE/CRAFT), inline accordion editors, and live prompt preview
 - Consistent layout across pages; centered nav menu with left‑aligned brand
+- Agent Runner: Steps timeline with per‑step edit (modal) and Run; vertical progress bar with milestone circles; modal run logs; inline inputs/results per step
 
 ## What's Left
 - Agent settings in UI and API mapping
@@ -20,6 +21,7 @@
 - Streaming and error observability
 - Scenario library expansion and calibration
 - Per‑field AI suggestions and validation in Builder; save/load configs
+- Agent Runner Phase 2: Validate/Decision blocks, per‑step model/temperature, streaming, save/share flows
 
 ## Current Status
 - Evaluator MVP implemented and usable; Prompt Builder in planning
@@ -30,6 +32,7 @@
 - Popover component dependency conflict (workaround: modal)
 - Need broader scenario set and calibration
 - Consider API rate limits/caching to reduce LLM costs
+- Next.js Turbopack root warning due to multiple lockfiles (harmless; can set `turbopack.root` or remove extra lockfile)
 
 ## Decision Evolution
 - Favor Zod schemas and structured JSON outputs

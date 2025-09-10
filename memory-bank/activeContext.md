@@ -5,6 +5,8 @@
 - Robust JSON parsing/normalization; clear UI feedback for errors
 - Componentization and shared contracts (scenarios, dimensions, rubric)
 - Model‑synthesized overall rationale for concise summary
+- Framework‑driven Prompt Builder (ICE / CRISPE / CRAFT) with inline editors and live preview
+- Consistent layout: centered top nav menu with left‑aligned brand; unified page shells (max‑w‑5xl, px‑6)
 
 ## Recent Changes
 - Extracted UI components: `ScenarioHeader`, `PromptEditor`, `EvaluationDialog`, `SegmentedBar`
@@ -13,7 +15,12 @@
 - Centralized rubric/dimension keys; single source of truth for UI and API
 - Added `overallRationale` to schema; updated system prompt and API to request/return it
 - Evaluator page now sends only `scenarioId` + `userPrompt`; displays overall rationale with fallback
-- UI polish: centered scenario section with increased vertical spacing; kept editor left‑aligned
+- Builder: Framework tabs (ICE/CRISPE/CRAFT), accordion blocks with inline editors and helper microcopy
+  - ICE order set to Instructions → Context → Examples with tailored copy
+  - CRISPE acronym mapped to Context, Role, Instruction, Subject, Preset, Exception; microcopy shown inline
+  - Clear action resets a block’s fields (no deletion); live prompt + JSON preview on right
+- Layout polish: centered nav menu with brand at left; standardized page width and horizontal padding
+- Typography: scenario title/description use serif styling with higher weight for readability
 
 ## Next Steps
 - Add agent settings (reasoning effort, eagerness, context budget)
@@ -21,6 +28,7 @@
 - Improve scenario set and taxonomy
 - Consider prefill option from scenario template (opt‑in)
 - Add caching/rate limiting; optional model toggle (quality vs cost)
+- Builder enhancements: per‑field AI suggestions, save/load configs, optional drag‑reorder, validation states
 
 ## Decisions & Preferences
 - Schema-first contracts; JSON responses rendered directly in UI

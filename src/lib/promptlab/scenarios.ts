@@ -89,8 +89,8 @@ export const scenarios: Scenario[] = [
   },
   {
     id: "jira-acceptance-criteria",
-    title: "Task → acceptance criteria (Gherkin)",
-    description: "Draft acceptance criteria for a UX task using Gherkin syntax.",
+    title: "Task → acceptance criteria",
+    description: "Draft acceptance criteria for a UX task.",
     tags: ["jira", "ux", "qa"],
     template:
       "You write acceptance criteria.\nInput: <task summary / user story>\nConstraints: Provide 3–5 Given/When/Then scenarios covering happy path and key edge cases.",

@@ -14,10 +14,10 @@ export function ScenarioHeader({ scenario, onReload }: { scenario: Scenario | nu
         </Button>
       </div>
       <div className="space-y-1">
-        <p className="text-2xl font-semibold text-purple-600">
+        <p className="text-2xl font-bold text-purple-600 font-serif">
           {scenario ? scenario.title : "Preparing scenario…"}
         </p>
-        <p className="text-sm text-purple-500 font-serif">
+        <p className="text-lg text-purple-500 font-serif font-regular">
           {scenario ? scenario.description : "One moment while we load a scenario for you."}
         </p>
       </div>

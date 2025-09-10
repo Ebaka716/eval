@@ -7,84 +7,114 @@ export default function Home() {
     <main className="p-6 space-y-8">
       <section className="space-y-1">
         <h1 className="text-2xl font-semibold">PromptLab</h1>
-        <p className="text-muted-foreground text-sm">
-          Learn, practice, and evaluate AI prompting skills with clear rubrics and reusable patterns.
-        </p>
+        <p className="text-muted-foreground text-sm">The fast lane to better prompts, clearer workflows, and demo‑ready agent flows.</p>
       </section>
 
+      {/* Evaluator */}
       <section>
         <Card>
           <CardHeader>
-            <CardTitle>Project brief</CardTitle>
-            <CardDescription>
-              An interactive platform to teach prompt chaining, evaluate workflows, and track progress over time.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
-              <li>Two modes: Evaluator (score with rubric) and Prompt Builder (design workflows).</li>
-              <li>Structured outputs (JSON/Markdown) for dashboards and learning.</li>
-              <li>Reusable templates, guardrails, and scenario-driven practice.</li>
-            </ul>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
             <CardTitle>Evaluator</CardTitle>
-            <CardDescription>Score your prompt against a 1–5 rubric and see rationales.</CardDescription>
+            <CardDescription>Instant, structured feedback on your prompt — like a friendly (but honest) editor.</CardDescription>
           </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">Write a prompt, get a rubric‑based score (1–5) across clarity, grounding, sequencing, guardrails, outcome quality, originality, and efficiency — plus a concise overall rationale.</p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <div className="text-sm font-medium">Business value</div>
+                <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                  <li>Standardize prompt quality across teams with a transparent rubric.</li>
+                  <li>Reduce iteration time; ship docs, drafts, and analyses faster.</li>
+                  <li>Create repeatable quality bars for onboarding and QA.</li>
+                </ul>
+              </div>
+              <div>
+                <div className="text-sm font-medium">Learning outcomes</div>
+                <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                  <li>See exactly which dimensions need work and why.</li>
+                  <li>Build prompt “muscle memory” with evidence and suggestions.</li>
+                  <li>Level up with stretch ideas without getting overwhelmed.</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
           <CardFooter>
             <Link href="/prompt">
-              <Button size="sm">Open Evaluator</Button>
+              <Button variant="secondary" size="sm">Open Evaluator</Button>
             </Link>
           </CardFooter>
         </Card>
+      </section>
 
+      {/* Prompt Builder */}
+      <section>
         <Card>
           <CardHeader>
             <CardTitle>Prompt Builder</CardTitle>
-            <CardDescription>Design multi‑step prompt workflows (coming soon).</CardDescription>
+            <CardDescription>Design multi‑step prompts with proven frameworks — no more spaghetti prompts.</CardDescription>
           </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">Compose prompts using ICE, CRISPE, or CRAFT blocks. Preview the live prompt, copy it, or download as a .txt for your playbook.</p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <div className="text-sm font-medium">Business value</div>
+                <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                  <li>Create reusable templates that scale across teams and use cases.</li>
+                  <li>Speed up delivery with shared patterns and consistent outputs.</li>
+                  <li>Reduce risk by baking guardrails and structure into every prompt.</li>
+                </ul>
+              </div>
+              <div>
+                <div className="text-sm font-medium">Learning outcomes</div>
+                <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                  <li>Internalize best‑practice scaffolds (instructions, context, examples).</li>
+                  <li>See how small tweaks change clarity and results in real time.</li>
+                  <li>Graduate from “one big prompt” to modular, maintainable design.</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
           <CardFooter>
             <Link href="/builder">
-              <Button variant="ghost" size="sm">Open Builder</Button>
+              <Button variant="secondary" size="sm">Open Builder</Button>
             </Link>
           </CardFooter>
         </Card>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2">
+      {/* Agent Runner */}
+      <section>
         <Card>
           <CardHeader>
-            <CardTitle>What we’ve built</CardTitle>
-            <CardDescription>Current functionality and UI</CardDescription>
+            <CardTitle>Agent Runner</CardTitle>
+            <CardDescription>String prompts together like LEGO — run step‑by‑step with visible handoffs.</CardDescription>
           </CardHeader>
-          <CardContent>
-            <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
-              <li>Randomized scenarios, user‑typed prompt editor, and submit flow.</li>
-              <li>LLM evaluation via OpenAI (gpt‑4o) with strict JSON validation.</li>
-              <li>Per‑dimension scores with segmented bars and rationales.</li>
-              <li>Rubric tab and Best practices modal.</li>
-              <li>Global nav with Evaluator and Builder.</li>
-            </ul>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">Build a simple agentic chain: input context → summarize → draft. Edit each step with a pencil, run it, and watch variables flow forward. A vertical progress bar shows milestones; logs live in a modal.</p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <div className="text-sm font-medium">Business value</div>
+                <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                  <li>Demo agent workflows quickly to stakeholders — no custom tooling required.</li>
+                  <li>De‑risk automation by validating steps, handoffs, and guardrails early.</li>
+                  <li>Make experimentation safe and measurable with per‑step logs.</li>
+                </ul>
+              </div>
+              <div>
+                <div className="text-sm font-medium">Learning outcomes</div>
+                <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                  <li>Understand chaining: how one output becomes the next input.</li>
+                  <li>Practice per‑step iteration without losing the bigger picture.</li>
+                  <li>See cost, latency, and quality trade‑offs per step.</li>
+                </ul>
+              </div>
+            </div>
           </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Next steps</CardTitle>
-            <CardDescription>Planned improvements</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
-              <li>Prompt Builder: multi‑step workflow editor with guardrails.</li>
-              <li>Configurable agent settings (reasoning effort, eagerness, budget).</li>
-              <li>Persistence of attempts and score history.</li>
-            </ul>
-          </CardContent>
+          <CardFooter>
+            <Link href="/runner">
+              <Button variant="secondary" size="sm">Open Runner</Button>
+            </Link>
+          </CardFooter>
         </Card>
       </section>
     </main>
